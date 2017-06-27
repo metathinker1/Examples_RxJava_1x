@@ -146,6 +146,11 @@ public class SimpleObservableEx01 {
                 });
     }
 
+    /*
+    Backlog:
+    - CompoundObservable: Chain multiple Observables must complete and then a final Observable executes: average of averages
+     */
+
     public static void main(String[] args) {
         SimpleObservableEx01 tester = new SimpleObservableEx01();
 
