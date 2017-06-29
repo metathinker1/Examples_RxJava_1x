@@ -1,5 +1,9 @@
 package com.example.com.example.rxjava;
 
+import com.netflix.hystrix.HystrixCommandGroupKey;
+import com.netflix.hystrix.HystrixCommandKey;
+import com.netflix.hystrix.HystrixCommandProperties;
+import com.netflix.hystrix.HystrixObservableCommand;
 import org.apache.http.client.utils.URIBuilder;
 import rx.Observable;
 
@@ -11,6 +15,8 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 // Test Comment Number 2
+
+// Simple update to test
 
 /*
 {TODO: Study: java.util.Optional }
@@ -42,5 +48,26 @@ public abstract class HttpClient {
                 return Observable.just(url);
             }).orElse(Observable.empty());
 
+    }
+
+    static class HystrixCommand<T> extends HystrixObservableCommand<T> {
+        private final Observable<T> observable;
+
+        HystrixCommand(String commandName, Observable<T> observable) {
+            super(Setter.withGroupKey(HystrixCommandGroupKey.Factory.asKey(HttpClient.class.getSimpleName()))
+                .andCommandKey(HystrixCommandKey.Factory.asKey(commandName))
+                .andCommandPropertiesDefaults(HystrixCommandProperties.Setter()
+                    .withExecutionTimeoutEnabled(false)
+                    .withExecutionTimeoutInMilliseconds(15000)
+                    .withExecutionIsolationSemaphoreMaxConcurrentRequests(10000)
+                    .withFallbackEnabled(true)
+                    .withCircuitBreakerEnabled(true)));
+            this.observable = observable;
+        }
+
+        @Override
+        protected Observable<T> construct() {
+            return observable;
+        }
     }
 }
