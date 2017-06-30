@@ -50,6 +50,10 @@ public abstract class HttpClient {
 
     }
 
+    public<T> Observable<T> getCommand(String commandName, Observable<T> observable) {
+        return new HystrixCommand<>(commandName, observable).toObservable();
+    }
+
     static class HystrixCommand<T> extends HystrixObservableCommand<T> {
         private final Observable<T> observable;
 
