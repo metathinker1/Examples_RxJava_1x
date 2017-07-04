@@ -4,9 +4,13 @@ import com.netflix.hystrix.HystrixCommandGroupKey;
 import com.netflix.hystrix.HystrixCommandKey;
 import com.netflix.hystrix.HystrixCommandProperties;
 import com.netflix.hystrix.HystrixObservableCommand;
+import com.netflix.hystrix.exception.HystrixRuntimeException;
 import org.apache.http.client.utils.URIBuilder;
 import rx.Observable;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
 
@@ -48,6 +52,23 @@ public abstract class HttpClient {
                 return Observable.just(url);
             }).orElse(Observable.empty());
 
+    }
+
+    private byte[] convertObjectToByteArray(Object value) throws IOException {
+        try(ByteArrayOutputStream b = new ByteArrayOutputStream()){
+            try(ObjectOutputStream o = new ObjectOutputStream(b)){
+                o.writeObject(value);
+            }
+            return b.toByteArray();
+        }
+    }
+
+    byte[] writeValue(Object value) {
+        try {
+            return convertObjectToByteArray(value);
+        } catch (Exception excp) {
+            throw new HystrixRuntimeException(HystrixRuntimeException.FailureType.COMMAND_EXCEPTION, null, "Bad format?", excp, null);
+        }
     }
 
     public<T> Observable<T> getCommand(String commandName, Observable<T> observable) {

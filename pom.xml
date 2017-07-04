@@ -28,6 +28,16 @@
       <artifactId>httpclient</artifactId>
       <version>4.5.3</version>
     </dependency>
+    <dependency>
+      <groupId>org.asynchttpclient</groupId>
+      <artifactId>async-http-client</artifactId>
+      <version>2.0.27</version>
+    </dependency>
+    <dependency>
+      <groupId>org.asynchttpclient</groupId>
+      <artifactId>async-http-client-extras-rxjava</artifactId>
+      <version>2.0.27</version>
+    </dependency>
 
     <dependency>
       <groupId>junit</groupId>
