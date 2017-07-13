@@ -54,6 +54,8 @@ public abstract class HttpClient {
 
     }
 
+    // {TextLink:URL:https://stackoverflow.com/questions/5837698/converting-any-object-to-a-byte-array-in-java}
+    // {TextLink:URL:https://stackoverflow.com/questions/2836646/java-serializable-object-to-byte-array}
     private byte[] convertObjectToByteArray(Object value) throws IOException {
         try(ByteArrayOutputStream b = new ByteArrayOutputStream()){
             try(ObjectOutputStream o = new ObjectOutputStream(b)){
